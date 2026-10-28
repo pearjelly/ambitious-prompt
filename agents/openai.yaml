@@ -1,6 +1,6 @@
 interface:
-  display_name: "提示词自动升级"
+  display_name: "AI 任务罗盘"
   short_description: "直接给任务时自动选择方法，先优化再执行，也支持仅改写提示词与完整版"
-  default_prompt: "使用 $prompt-upgrader 自动选择方法，优化并执行下面的任务："
+  default_prompt: "使用 $task-compass 自动选择方法，优化并执行下面的任务："
 policy:
   allow_implicit_invocation: true
