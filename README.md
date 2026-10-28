@@ -1,8 +1,8 @@
 # Ambitious Prompt
 
-一个面向支持 [Agent Skills](https://agentskills.io/specification) 的 AI 工具的提示词优化 Skill。它根据任务，从高度、广度、深度、速度四个维度选择适用方法，明确目标、约束、证据和验收标准，再完成用户授权的任务。
+一个面向支持 [Agent Skills](https://agentskills.io/specification) 的 AI 工具的提示词优化 Skill。用户手动调用后，它根据任务，从高度、广度、深度、速度四个维度选择适用方法，明确目标、约束、证据和验收标准，生成可复制的提示词。
 
-Ambitious Prompt is an Agent Skill that adapts prompt improvement methods to each task. It can improve a request before execution or return a reusable prompt without executing it. Previously named Task Compass and Prompt Upgrader.
+Ambitious Prompt is a manually invoked Agent Skill that adapts prompt improvement methods to each task. It returns a reusable prompt by default and executes only when explicitly requested. Previously named Task Compass and Prompt Upgrader.
 
 ## 方法来源
 
@@ -19,28 +19,17 @@ Inspired by Felix Rieseberg’s [“How to be more ambitious: A tutorial for hum
 
 ## 使用方式
 
-- **直接交付任务**：技能适用时，先在内部优化，再执行并交付结果。简单任务采用轻量处理。
-- **只改写**：说“只优化这个提示词，不执行：……”，获得可复制的提示词。
+- **手动改写**：调用本技能并给出任务，默认获得可复制的提示词。
+- **改写并执行**：调用技能时明确说“改写后执行”，再完成用户授权的任务。
 - **完整模式**：说“用完整版”，覆盖四个维度和深度方法。
-- **跳过优化**：说“这次不优化，直接按原提示词执行”。
 
 例如，在 Codex 中也可以显式调用：
 
 ```text
-$ambitious-prompt 帮我规划一个月的产品试点，预算不超过 2 万元。
+$ambitious-prompt 只改写提示词：帮我规划一个月的产品试点，预算不超过 2 万元。
 ```
 
 技能保留用户指定的时间、预算、资料范围和其他约束；把事实、推断与待验证项分开。模拟专家视角不等同于真实专家意见或外部评审。
-
-## 避免重复改写
-
-默认情况下，每份可复制的改写提示词开头都会带有 `【ambitious-prompt:已优化】`。复制时保留标记和正文，例如：
-
-```text
-【ambitious-prompt:已优化】请依据给定材料写一份内部摘要，保留样本数与收入状态，不补充未经证实的结论。
-```
-
-再次将它作为任务提交时，已加载本技能的助手会识别标记、跳过再次改写，并按当次指令执行。用户仍可明确要求“再次改写”，或要求“只改写，不执行”。标记属于文本约定；如果平台没有加载该技能、移除了标记或模型没有遵循指令，就不能保证自动识别。
 
 ## 安装
 
@@ -67,21 +56,22 @@ mkdir -p ~/.config/opencode/skills
 git clone https://github.com/pearjelly/ambitious-prompt.git ~/.config/opencode/skills/ambitious-prompt
 ```
 
-其他支持 Agent Skills 的工具可按其官方文档安装此目录。`agents/openai.yaml` 是 Codex 的可选界面配置；核心规则和方法库不依赖它。各工具的自动发现、触发与权限行为不同，安装后是否加载仍取决于对应环境和模型。此项目此前名为 Task Compass 和 Prompt Upgrader；已安装旧版本的用户应迁移其个人设置，避免同时加载多个副本。
+其他支持 Agent Skills 的工具可按其官方文档安装此目录。`agents/openai.yaml` 是 Codex 的可选界面配置；核心规则和方法库不依赖它。此项目此前名为 Task Compass 和 Prompt Upgrader；已安装旧版本的用户应迁移其个人设置，避免同时加载多个副本。
 
-如希望直接给任务时默认使用它，可将以下约定加入所用工具支持的个人或项目指令文件（例如 Codex 的 `~/.codex/AGENTS.md`、Claude Code 的 `~/.claude/CLAUDE.md`，或 OpenCode 的 `~/.config/opencode/AGENTS.md`）：
+## 设置手动调用
 
-```markdown
-收到可执行任务时，使用 ambitious-prompt 先在内部优化，再完成用户授权的任务。若待执行提示词以【ambitious-prompt:已优化】开头，直接按任务及当次用户要求处理，不再重复改写。简单任务保持简短。用户要求只改写时仅交付提示词；要求再次改写或跳过优化时遵从。不要因此改变任务范围、约束或授权。
-```
+- **Codex**：本技能已通过 `agents/openai.yaml` 关闭隐式调用。使用 `$ambitious-prompt` 显式调用。
+- **Claude Code**：安装后，在该工具的技能副本的 `SKILL.md` 顶部 YAML 中加入 `disable-model-invocation: true`，然后通过 `/ambitious-prompt` 调用。该字段是 Claude Code 的扩展；请勿添加到同时供 Codex 验证的同一份技能副本中。
+- **OpenCode V2**：在该工具的技能副本的 `SKILL.md` 顶部 YAML 中加入 `metadata:` 及其下缩进的 `opencode/autoinvoke: false`，然后使用 `@ambitious-prompt` 调用。V1 文档未提供同等的隐式调用关闭设置；描述中的“仅手动”只是指令，不能保证自动触发被禁用，请确认所用版本支持相应设置后再安装。
+- **其他工具**：按其官方文档关闭模型自动调用。若工具没有此功能，技能的文字描述无法提供强制保证。
 
-请保留已有指令文件内容，将约定追加到合适位置。更具体的用户要求和项目规则可能影响实际行为。安装位置参考 [Codex Skills](https://learn.chatgpt.com/docs/build-skills)、[Claude Code Skills](https://code.claude.com/docs/en/skills) 和 [OpenCode Agent Skills](https://opencode.ai/docs/skills) 官方文档。
+如果此前曾在个人或项目指令文件中加入自动调用本技能的规则，请自行删除对应规则并保留其他内容。安装和调用机制参考 [Codex Skills](https://learn.chatgpt.com/docs/build-skills)、[Claude Code Skills](https://code.claude.com/docs/en/skills) 和 [OpenCode Skills V2](https://opencode.ai/v2/docs/skills)。
 
 ## 文件结构
 
 ```text
 SKILL.md                        触发条件、选法规则和输出方式
-agents/openai.yaml              名称、示例与自动调用设置
+agents/openai.yaml              Codex 名称、示例与手动调用设置
 references/methods.md           元升级及十种方法
 references/evaluation-cases.md  行为回归案例
 ```

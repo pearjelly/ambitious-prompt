@@ -1,6 +1,6 @@
 interface:
   display_name: "Ambitious Prompt"
-  short_description: "直接给任务时自动选择方法，先优化再执行，也支持仅改写提示词与完整版"
-  default_prompt: "使用 $ambitious-prompt 自动选择方法，优化并执行下面的任务："
+  short_description: "手动调用后选择合适方法，改写提示词；明确要求时再执行任务"
+  default_prompt: "使用 $ambitious-prompt 改写下面的提示词："
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false
