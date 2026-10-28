@@ -4,6 +4,19 @@
 
 Prompt Upgrader is a Codex skill that adapts prompt improvement methods to each task. It can improve a request before execution or return a reusable prompt without executing it.
 
+## 方法来源
+
+本项目的核心框架受到 Felix Rieseberg 的文章 [《How to be more ambitious: A tutorial for humans with models》](https://felixrieseberg.com/how-to-be-more-ambitious-a-tutorial-for-humans-with-models/) 启发。Felix 是 Anthropic 的工程经理，曾负责 Claude.ai、Cowork 和 Claude Code Desktop 的工程工作。他在文中提出用四个维度思考如何更有野心地使用 AI：
+
+- **高度（Altitude）**：关注任务背后想达到的结果。
+- **广度（Range）**：引入不同领域的知识、工具和方法。
+- **深度（Depth）**：运用专业方法、原始数据和外部检验，把问题做深。
+- **速度（Speed）**：用更少时间完成工作。
+
+原文重点展开高度、深度和广度，将速度列为熟悉的基础维度。本项目在此基础上整理出自动选法、提示词改写、执行与验收流程；速度维度的并行和迭代安排是本项目的扩展。项目对原文思想进行独立改编，引用原文并不代表 Felix Rieseberg 或 Anthropic 参与、认可或背书本项目。
+
+Inspired by Felix Rieseberg’s [“How to be more ambitious: A tutorial for humans with models”](https://felixrieseberg.com/how-to-be-more-ambitious-a-tutorial-for-humans-with-models/). This is an independent adaptation, not an endorsement by the author or Anthropic.
+
 ## 使用方式
 
 - **直接交付任务**：技能适用时，先在内部优化，再执行并交付结果。简单任务采用轻量处理。
