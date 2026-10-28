@@ -1,8 +1,8 @@
 # Ambitious Prompt
 
-一个面向 Codex 的提示词优化 Skill。它根据任务，从高度、广度、深度、速度四个维度选择适用方法，明确目标、约束、证据和验收标准，再完成用户授权的任务。
+一个面向支持 [Agent Skills](https://agentskills.io/specification) 的 AI 工具的提示词优化 Skill。它根据任务，从高度、广度、深度、速度四个维度选择适用方法，明确目标、约束、证据和验收标准，再完成用户授权的任务。
 
-Ambitious Prompt is a Codex skill that adapts prompt improvement methods to each task. It can improve a request before execution or return a reusable prompt without executing it. Previously named Task Compass and Prompt Upgrader.
+Ambitious Prompt is an Agent Skill that adapts prompt improvement methods to each task. It can improve a request before execution or return a reusable prompt without executing it. Previously named Task Compass and Prompt Upgrader.
 
 ## 方法来源
 
@@ -24,7 +24,7 @@ Inspired by Felix Rieseberg’s [“How to be more ambitious: A tutorial for hum
 - **完整模式**：说“用完整版”，覆盖四个维度和深度方法。
 - **跳过优化**：说“这次不优化，直接按原提示词执行”。
 
-也可以显式调用：
+例如，在 Codex 中也可以显式调用：
 
 ```text
 $ambitious-prompt 帮我规划一个月的产品试点，预算不超过 2 万元。
@@ -32,23 +32,50 @@ $ambitious-prompt 帮我规划一个月的产品试点，预算不超过 2 万�
 
 技能保留用户指定的时间、预算、资料范围和其他约束；把事实、推断与待验证项分开。模拟专家视角不等同于真实专家意见或外部评审。
 
+## 避免重复改写
+
+默认情况下，每份可复制的改写提示词开头都会带有 `【ambitious-prompt:已优化】`。复制时保留标记和正文，例如：
+
+```text
+【ambitious-prompt:已优化】请依据给定材料写一份内部摘要，保留样本数与收入状态，不补充未经证实的结论。
+```
+
+再次将它作为任务提交时，已加载本技能的助手会识别标记、跳过再次改写，并按当次指令执行。用户仍可明确要求“再次改写”，或要求“只改写，不执行”。标记属于文本约定；如果平台没有加载该技能、移除了标记或模型没有遵循指令，就不能保证自动识别。
+
 ## 安装
 
-将仓库克隆到个人 Codex 技能目录：
+将仓库克隆到所用工具的个人技能目录，保留 `SKILL.md` 和 `references/` 的相对位置。选择与你使用的工具对应的一组命令即可；目标目录已存在时先检查并备份，避免覆盖。
+
+**Codex**：
 
 ```bash
+mkdir -p ~/.codex/skills
 git clone https://github.com/pearjelly/ambitious-prompt.git ~/.codex/skills/ambitious-prompt
 ```
 
-如果该目录已存在，请先检查已有文件，避免覆盖。Codex 通常会自动发现新技能；未出现时可重启 Codex。技能允许自动调用，但是否选择某个技能仍取决于当前任务和环境。也可以在对话中用 `$ambitious-prompt` 显式调用。此项目此前名为 Task Compass 和 Prompt Upgrader；已安装旧版本的用户应迁移其个人设置，避免同时加载多个副本。
+**Claude Code**：
 
-如希望直接给任务时默认使用它，可将以下约定加入个人 `~/.codex/AGENTS.md`：
-
-```markdown
-收到可执行任务时，使用 ambitious-prompt 先在内部优化，再完成用户授权的任务。简单任务保持简短。用户要求只改写时仅交付提示词；要求跳过优化时遵从。不要因此改变任务范围、约束或授权。
+```bash
+mkdir -p ~/.claude/skills
+git clone https://github.com/pearjelly/ambitious-prompt.git ~/.claude/skills/ambitious-prompt
 ```
 
-请保留已有的 `AGENTS.md` 内容，将约定追加到合适位置。更具体的用户要求和项目规则可能影响实际行为。参考 [Codex 全局指令文档](https://learn.chatgpt.com/docs/agent-configuration/agents-md)与 [Skills 文档](https://learn.chatgpt.com/docs/build-skills)。
+**OpenCode**：
+
+```bash
+mkdir -p ~/.config/opencode/skills
+git clone https://github.com/pearjelly/ambitious-prompt.git ~/.config/opencode/skills/ambitious-prompt
+```
+
+其他支持 Agent Skills 的工具可按其官方文档安装此目录。`agents/openai.yaml` 是 Codex 的可选界面配置；核心规则和方法库不依赖它。各工具的自动发现、触发与权限行为不同，安装后是否加载仍取决于对应环境和模型。此项目此前名为 Task Compass 和 Prompt Upgrader；已安装旧版本的用户应迁移其个人设置，避免同时加载多个副本。
+
+如希望直接给任务时默认使用它，可将以下约定加入所用工具支持的个人或项目指令文件（例如 Codex 的 `~/.codex/AGENTS.md`、Claude Code 的 `~/.claude/CLAUDE.md`，或 OpenCode 的 `~/.config/opencode/AGENTS.md`）：
+
+```markdown
+收到可执行任务时，使用 ambitious-prompt 先在内部优化，再完成用户授权的任务。若待执行提示词以【ambitious-prompt:已优化】开头，直接按任务及当次用户要求处理，不再重复改写。简单任务保持简短。用户要求只改写时仅交付提示词；要求再次改写或跳过优化时遵从。不要因此改变任务范围、约束或授权。
+```
+
+请保留已有指令文件内容，将约定追加到合适位置。更具体的用户要求和项目规则可能影响实际行为。安装位置参考 [Codex Skills](https://learn.chatgpt.com/docs/build-skills)、[Claude Code Skills](https://code.claude.com/docs/en/skills) 和 [OpenCode Agent Skills](https://opencode.ai/docs/skills) 官方文档。
 
 ## 文件结构
 
