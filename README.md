@@ -1,8 +1,8 @@
-# Task Compass · AI 任务罗盘
+# Ambitious Prompt
 
 一个面向 Codex 的提示词优化 Skill。它根据任务，从高度、广度、深度、速度四个维度选择适用方法，明确目标、约束、证据和验收标准，再完成用户授权的任务。
 
-Task Compass is a Codex skill that adapts prompt improvement methods to each task. It can improve a request before execution or return a reusable prompt without executing it. Previously named Prompt Upgrader.
+Ambitious Prompt is a Codex skill that adapts prompt improvement methods to each task. It can improve a request before execution or return a reusable prompt without executing it. Previously named Task Compass and Prompt Upgrader.
 
 ## 方法来源
 
@@ -27,7 +27,7 @@ Inspired by Felix Rieseberg’s [“How to be more ambitious: A tutorial for hum
 也可以显式调用：
 
 ```text
-$task-compass 帮我规划一个月的产品试点，预算不超过 2 万元。
+$ambitious-prompt 帮我规划一个月的产品试点，预算不超过 2 万元。
 ```
 
 技能保留用户指定的时间、预算、资料范围和其他约束；把事实、推断与待验证项分开。模拟专家视角不等同于真实专家意见或外部评审。
@@ -37,15 +37,15 @@ $task-compass 帮我规划一个月的产品试点，预算不超过 2 万元。
 将仓库克隆到个人 Codex 技能目录：
 
 ```bash
-git clone https://github.com/pearjelly/task-compass.git ~/.codex/skills/task-compass
+git clone https://github.com/pearjelly/ambitious-prompt.git ~/.codex/skills/ambitious-prompt
 ```
 
-如果该目录已存在，请先检查已有文件，避免覆盖。Codex 通常会自动发现新技能；未出现时可重启 Codex。技能允许自动调用，但是否选择某个技能仍取决于当前任务和环境。也可以在对话中用 `$task-compass` 显式调用。此项目原名 Prompt Upgrader；已安装旧版本的用户应迁移其个人设置，避免同时加载两个副本。
+如果该目录已存在，请先检查已有文件，避免覆盖。Codex 通常会自动发现新技能；未出现时可重启 Codex。技能允许自动调用，但是否选择某个技能仍取决于当前任务和环境。也可以在对话中用 `$ambitious-prompt` 显式调用。此项目此前名为 Task Compass 和 Prompt Upgrader；已安装旧版本的用户应迁移其个人设置，避免同时加载多个副本。
 
 如希望直接给任务时默认使用它，可将以下约定加入个人 `~/.codex/AGENTS.md`：
 
 ```markdown
-收到可执行任务时，使用 task-compass 先在内部优化，再完成用户授权的任务。简单任务保持简短。用户要求只改写时仅交付提示词；要求跳过优化时遵从。不要因此改变任务范围、约束或授权。
+收到可执行任务时，使用 ambitious-prompt 先在内部优化，再完成用户授权的任务。简单任务保持简短。用户要求只改写时仅交付提示词；要求跳过优化时遵从。不要因此改变任务范围、约束或授权。
 ```
 
 请保留已有的 `AGENTS.md` 内容，将约定追加到合适位置。更具体的用户要求和项目规则可能影响实际行为。参考 [Codex 全局指令文档](https://learn.chatgpt.com/docs/agent-configuration/agents-md)与 [Skills 文档](https://learn.chatgpt.com/docs/build-skills)。

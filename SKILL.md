@@ -1,9 +1,9 @@
 ---
-name: task-compass
+name: ambitious-prompt
 description: Use at the start of actionable user tasks, including writing, analysis, research, coding, creation and revision, to improve the task before executing it; also use for explicit prompt rewriting. 用户直接给任务时自动先优化再执行，无需输入技能名；明确只改写时仅交付提示词，要求跳过优化时遵守。闲聊、致谢与简短状态追问不启动。
 ---
 
-# AI 任务罗盘
+# Ambitious Prompt
 
 根据任务的真实难点，先做轻量元升级，再从高度、广度、深度、速度中选择最有用的方法。用户直接给任务时，默认内部优化后连续执行；用户只要提示词时，交付可复制的改写版。不要把所有方法拼成冗长模板。本技能改善任务定义与验收，不替代适用的领域技能。
 
